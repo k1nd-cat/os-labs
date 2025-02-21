@@ -62,7 +62,7 @@ void test_random_read_cached(const char *path) {
     }
 
     long long end = get_time_ns();
-    print_test_result("RandomRead_Cached", end - start);
+    print_test_result("RandomRead_Cached  ", end - start);
 
     lab2_close(fd);
 }
@@ -116,7 +116,7 @@ void test_mixed_workload_cached(const char *path) {
     }
 
     long long end = get_time_ns();
-    print_test_result("MixedWorkload_Cached", end - start);
+    print_test_result("MixedWorkload_Cached  ", end - start);
 
     lab2_close(fd);
 }
@@ -172,14 +172,21 @@ void test_tight_area_random_read_cached(const char *path) {
     }
 
     long long end = get_time_ns();
-    print_test_result("TightAreaRandomRead_Cached", end - start);
+    print_test_result("TightAreaRandomRead_Cached  ", end - start);
 
     lab2_close(fd);
 }
 
 // TightAreaRandomRead_Uncached
 void test_tight_area_random_read_uncached(const char *path) {
-    HANDLE hFile = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+    HANDLE hFile = CreateFileA(path,
+        GENERIC_READ, FILE_SHARE_READ,
+        nullptr,
+        OPEN_EXISTING,
+        FILE_FLAG_NO_BUFFERING,
+        nullptr
+    );
+
     if (hFile == INVALID_HANDLE_VALUE) {
         perror("CreateFileA");
         return;
@@ -220,7 +227,7 @@ void test_sequential_read_cached(const char *path) {
     }
 
     long long end = get_time_ns();
-    print_test_result("SequentialRead_Cached", end - start);
+    print_test_result("SequentialRead_Cached  ", end - start);
 
     lab2_close(fd);
 }
