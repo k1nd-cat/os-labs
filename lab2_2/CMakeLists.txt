@@ -4,36 +4,30 @@ project(NRU_Cache_Benchmark CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Конфигурация для Windows API
 if(WIN32)
     add_definitions(-D_WIN32_WINNT=0x0A00)
     set(PLATFORM_LIBS Kernel32.lib)
 endif()
 
-# Основная библиотека кэша
 add_library(nru_cache SHARED
-        include/file_operations.h  # Добавляем file_operations.h
-        src/file_operations.cpp    # Добавляем file_operations.cpp
-        include/nru_cache.h        # Оставляем nru_cache.h
-        src/nru_cache.cpp         # Оставляем nru_cache.cpp
+        include/file_operations.h
+        src/file_operations.cpp
+        include/nru_cache.h
+        src/nru_cache.cpp
 )
 
-# Указываем, что include директория публична для библиотеки
 target_include_directories(nru_cache PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# Основное приложение с тестами
 add_executable(nru_cache_benchmark
         app/main.cpp
 )
 
-# Линкуем библиотеку и зависимости
 target_link_libraries(nru_cache_benchmark
         PRIVATE nru_cache ${PLATFORM_LIBS}
 )
 
-# Настройки для Release
 set_target_properties(nru_cache_benchmark PROPERTIES
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
 )
