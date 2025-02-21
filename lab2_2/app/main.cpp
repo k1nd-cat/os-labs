@@ -33,12 +33,10 @@ void print_separator() {
     printf("--------------------------------------------------\n");
 }
 
-// Print a test header
 void print_test_header(const char *test_name) {
     printf("\n=== %s ===\n", test_name);
 }
 
-// Print test results in a readable format
 void print_test_result(const char *test_name, long long duration_ns) {
     printf("%s: %.2f ms\n", test_name, ns_to_ms(duration_ns));
 }
@@ -108,9 +106,9 @@ void test_mixed_workload_cached(const char *path) {
         off_t offset = block * BLOCK_SIZE;
         lab2_lseek(fd, offset, SEEK_SET);
 
-        if (i % 10 < 7) { // 70% reads
+        if (i % 10 < 7) {
             lab2_read(fd, buf, BLOCK_SIZE);
-        } else { // 30% writes
+        } else {
             lab2_write(fd, buf, BLOCK_SIZE);
         }
     }
@@ -137,10 +135,10 @@ void test_mixed_workload_uncached(const char *path) {
         off_t offset = block * BLOCK_SIZE;
         DWORD bytesRead, bytesWritten;
 
-        if (i % 10 < 7) { // 70% reads
+        if (i % 10 < 7) {
             SetFilePointer(hFile, offset, NULL, FILE_BEGIN);
             ReadFile(hFile, buf, BLOCK_SIZE, &bytesRead, NULL);
-        } else { // 30% writes
+        } else {
             SetFilePointer(hFile, offset, NULL, FILE_BEGIN);
             WriteFile(hFile, buf, BLOCK_SIZE, &bytesWritten, NULL);
             FlushFileBuffers(hFile);
@@ -234,7 +232,15 @@ void test_sequential_read_cached(const char *path) {
 
 // SequentialRead_Uncached
 void test_sequential_read_uncached(const char *path) {
-    HANDLE hFile = CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+    HANDLE hFile = CreateFileA(
+        path,
+        GENERIC_READ,
+        FILE_SHARE_READ,
+        nullptr,
+        OPEN_EXISTING,
+        FILE_FLAG_NO_BUFFERING,
+        nullptr
+    );
     if (hFile == INVALID_HANDLE_VALUE) {
         perror("CreateFileA");
         return;
@@ -246,7 +252,7 @@ void test_sequential_read_uncached(const char *path) {
     for (size_t block = 0; block < NUM_BLOCKS; block++) {
         off_t offset = block * BLOCK_SIZE;
         DWORD bytesRead;
-        SetFilePointer(hFile, offset, NULL, FILE_BEGIN);
+        SetFilePointer(hFile, offset, nullptr, FILE_BEGIN);
         ReadFile(hFile, buf, BLOCK_SIZE, &bytesRead, NULL);
     }
 
@@ -260,7 +266,15 @@ int main() {
     const char *path = "testfile.bin";
 
     // Create a large file for testing
-    HANDLE hFile = CreateFileA(path, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_FLAG_NO_BUFFERING, NULL);
+    HANDLE hFile = CreateFileA(
+        path,
+        GENERIC_READ | GENERIC_WRITE,
+        FILE_SHARE_READ | FILE_SHARE_WRITE,
+        nullptr,
+        CREATE_ALWAYS,
+        FILE_FLAG_NO_BUFFERING,
+        nullptr
+    );
     if (hFile == INVALID_HANDLE_VALUE) {
         perror("CreateFileA");
         return 1;
@@ -268,7 +282,7 @@ int main() {
 
     LARGE_INTEGER fileSize;
     fileSize.QuadPart = FILE_SIZE;
-    if (!SetFilePointerEx(hFile, fileSize, NULL, FILE_BEGIN)) {
+    if (!SetFilePointerEx(hFile, fileSize, nullptr, FILE_BEGIN)) {
         perror("SetFilePointerEx");
         return 1;
     }
